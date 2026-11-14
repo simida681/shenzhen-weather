@@ -1,0 +1,38 @@
+# ---------- Python 缓存与编译产物 ----------
+__pycache__/
+*.py[cod]
+*$py.class
+*.egg-info/
+.eggs/
+build/
+dist/
+
+# ---------- 虚拟环境 ----------
+.venv/
+venv/
+env/
+ENV/
+.python-version
+
+# ---------- 数据分析临时文件 ----------
+.ipynb_checkpoints/
+*.log
+*.tmp
+*.temp
+*.bak
+
+# ---------- 编辑器与 IDE ----------
+.idea/
+.vscode/
+*.swp
+*.swo
+
+# ---------- 操作系统文件 ----------
+.DS_Store
+Thumbs.db
+desktop.ini
+
+# ---------- 本地环境变量与密钥 ----------
+.env
+.env.*
+!.env.example

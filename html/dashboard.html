@@ -1,0 +1,189 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>深圳 · 近一年天气数据可视化看板</title>
+<style>
+    :root {
+        --bg: #f4f7fb;
+        --card: #ffffff;
+        --text: #1f2937;
+        --muted: #6b7280;
+        --primary: #2563eb;
+        --shadow: 0 10px 30px rgba(15, 23, 42, 0.08);
+    }
+    * { box-sizing: border-box; }
+    body {
+        margin: 0;
+        font-family: "Microsoft YaHei", "PingFang SC", "Helvetica Neue", Arial, sans-serif;
+        background: var(--bg);
+        color: var(--text);
+    }
+    .hero {
+        padding: 48px 24px 40px;
+        text-align: center;
+        color: #fff;
+        background: linear-gradient(135deg, #0f2b5b 0%, #1e40af 45%, #3b82f6 100%);
+        box-shadow: 0 12px 30px rgba(30, 64, 175, 0.25);
+    }
+    .hero h1 {
+        margin: 0 0 12px;
+        font-size: 32px;
+        letter-spacing: 2px;
+        font-weight: 600;
+    }
+    .hero p {
+        margin: 0;
+        font-size: 14px;
+        opacity: 0.85;
+        letter-spacing: 0.5px;
+    }
+    main {
+        max-width: 1400px;
+        margin: 0 auto;
+        padding: 32px 24px 56px;
+    }
+    .kpis {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+        gap: 16px;
+        margin-bottom: 28px;
+    }
+    .kpi {
+        background: var(--card);
+        border-radius: 14px;
+        padding: 18px 20px;
+        box-shadow: var(--shadow);
+        border-top: 3px solid var(--primary);
+        display: flex;
+        flex-direction: column;
+        gap: 6px;
+    }
+    .kpi-label {
+        font-size: 13px;
+        color: var(--muted);
+        letter-spacing: 0.5px;
+    }
+    .kpi-value {
+        font-size: 24px;
+        font-weight: 700;
+        color: #0f2b5b;
+        line-height: 1.2;
+    }
+    .kpi-sub {
+        font-size: 12px;
+        color: #9ca3af;
+    }
+    .charts {
+        display: grid;
+        grid-template-columns: 1fr;
+        gap: 24px;
+    }
+    .card {
+        background: var(--card);
+        border-radius: 16px;
+        padding: 8px;
+        box-shadow: var(--shadow);
+        overflow: hidden;
+        transition: transform 0.2s ease, box-shadow 0.2s ease;
+    }
+    .card:hover {
+        transform: translateY(-3px);
+        box-shadow: 0 16px 38px rgba(15, 23, 42, 0.12);
+    }
+    .card iframe {
+        display: block;
+        width: 100%;
+        height: 520px;
+        border: none;
+        border-radius: 12px;
+        background: #fff;
+    }
+    footer {
+        margin-top: 36px;
+        text-align: center;
+        font-size: 12px;
+        color: var(--muted);
+        line-height: 1.8;
+    }
+    @media (min-width: 1100px) {
+        .charts { grid-template-columns: 1fr 1fr; }
+        .wide { grid-column: 1 / -1; }
+    }
+    @media (max-width: 640px) {
+        .hero h1 { font-size: 24px; }
+        .card iframe { height: 460px; }
+        main { padding: 20px 12px 40px; }
+    }
+</style>
+</head>
+<body>
+<header class="hero">
+    <h1>深圳 · 近一年天气数据可视化看板</h1>
+    <p>统计区间：2025-11-13 ~ 2026-11-13 ｜ 数据来源：Open-Meteo 公开历史天气接口</p>
+</header>
+<main>
+    <section class="kpis">
+        <div class="kpi">
+            <span class="kpi-label">有效数据天数</span>
+            <span class="kpi-value">366 天</span>
+            <span class="kpi-sub">已完成清洗</span>
+        </div>
+        <div class="kpi">
+            <span class="kpi-label">年平均气温</span>
+            <span class="kpi-value">24.1 ℃</span>
+            <span class="kpi-sub">（最高 + 最低）/ 2</span>
+        </div>
+        <div class="kpi">
+            <span class="kpi-label">极端最高气温</span>
+            <span class="kpi-value">35.7 ℃</span>
+            <span class="kpi-sub">2026-08-09</span>
+        </div>
+        <div class="kpi">
+            <span class="kpi-label">极端最低气温</span>
+            <span class="kpi-value">7.0 ℃</span>
+            <span class="kpi-sub">2026-01-07</span>
+        </div>
+        <div class="kpi">
+            <span class="kpi-label">平均相对湿度</span>
+            <span class="kpi-value">76.4 %</span>
+            <span class="kpi-sub">全年平均</span>
+        </div>
+        <div class="kpi">
+            <span class="kpi-label">雨天日数</span>
+            <span class="kpi-value">233 天</span>
+            <span class="kpi-sub">天气状况含“雨”</span>
+        </div>
+        <div class="kpi">
+            <span class="kpi-label">最常见天气</span>
+            <span class="kpi-value">阴</span>
+            <span class="kpi-sub">占比 28.1%</span>
+        </div>
+        <div class="kpi">
+            <span class="kpi-label">最热月份</span>
+            <span class="kpi-value">2026-08</span>
+            <span class="kpi-sub">月均 28.8 ℃</span>
+        </div>
+    </section>
+    <section class="charts">
+        <div class="card wide">
+            <iframe src="temperature_line.html" title="高低温双折线图" loading="lazy"></iframe>
+        </div>
+        <div class="card">
+            <iframe src="monthly_avg_bar.html" title="月度平均气温柱状图" loading="lazy"></iframe>
+        </div>
+        <div class="card">
+            <iframe src="weather_pie.html" title="天气类型分布饼图" loading="lazy"></iframe>
+        </div>
+        <div class="card wide">
+            <iframe src="humidity_line.html" title="相对湿度变化折线图" loading="lazy"></iframe>
+        </div>
+    </section>
+    <footer>
+        数据来源：Open-Meteo 公开历史天气接口 · 可视化引擎：PyECharts<br>
+        看板与四张图表文件需保持在同一 html 目录下 · 生成时间：2026-11-13 17:29
+    </footer>
+</main>
+</body>
+</html>
