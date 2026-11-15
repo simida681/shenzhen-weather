@@ -8,6 +8,9 @@
 
 ```
 shenzhen-weather-analysis/
+├── .github/
+│   └── workflows/
+│       └── update-weather.yml # GitHub Actions：每日自动更新数据与图表
 ├── spider.py                  # 爬虫：抓取、清洗并保存天气数据
 ├── analysis.py                # 分析：pandas 清洗 + pyecharts 可视化 + 看板
 ├── data/
@@ -75,6 +78,32 @@ python analysis.py
 
 > 抓取过程包含友好延时，13 个自然月分片大约需要半分钟，属于正常现象。
 
+## 数据自动更新
+
+项目通过 `.github/workflows/update-weather.yml` 实现无人值守更新：
+
+| 项目 | 说明 |
+| --- | --- |
+| 触发方式 | 每天北京时间 **09:20** 自动运行一次，也可在 Actions 页面手动触发 |
+| 执行内容 | `python spider.py` 重新抓取最近一年数据 → `python analysis.py` 重建全部图表与看板 |
+| 结果处理 | 若 `data/` 或 `html/` 有变化，自动提交并推送到 `main` 分支 |
+| 看板标识 | 看板首张指标卡片显示「数据更新于」，用于确认数据新鲜度 |
+
+因此仓库中的 CSV 与图表始终是最近一次自动运行的结果，无需本地手动操作。
+
+## 在线预览（GitHub Pages）
+
+1. 打开仓库 **Settings → Pages**；
+2. **Source** 选择 `Deploy from a branch`；
+3. **Branch** 选择 `main`，目录选择 `/(root)`，点击 **Save**；
+4. 部署完成后访问：
+
+```
+https://<你的用户名>.github.io/shenzhen-weather/html/dashboard.html
+```
+
+> 自动更新任务提交后，Pages 会随之重新部署，页面数据随之刷新。
+
 ## 图表说明
 
 | 文件 | 图表 | 说明 |
@@ -83,7 +112,7 @@ python analysis.py
 | `monthly_avg_bar.html` | 月度平均气温柱状图 | 月平均气温 = 当月每日 (最高 + 最低) / 2 的均值；虚线为全年平均气温 |
 | `weather_pie.html` | 天气类型分布饼图 | 环形图展示各天气类型天数占比；类型过多时仅展示前 8 类，其余合并为“其他” |
 | `humidity_line.html` | 相对湿度变化折线图 | 面积折线展示全年湿度走势，标注平均湿度，支持缩放与悬浮提示 |
-| `dashboard.html` | 汇总看板 | 顶部 8 个关键指标卡片，下方整合四张图表；图表通过 iframe 引用同目录文件 |
+| `dashboard.html` | 汇总看板 | 顶部 9 个关键指标卡片（含数据更新时间），下方整合四张图表；图表通过 iframe 引用同目录文件 |
 
 > 注意：`dashboard.html` 与另外四个 HTML 文件必须保持在同一个 `html/` 目录下，移动时请一并移动。
 
