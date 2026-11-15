@@ -656,12 +656,12 @@ def build_dashboard(df: pd.DataFrame) -> None:
     图表通过 iframe 引用同目录下已生成的独立 HTML 文件，便于单独分享与维护。
     """
     stats = collect_stats(df)
-    # 本次生成时间：GitHub Actions 每日自动运行时即为最新数据时间
-    generated_at = pd.Timestamp.now().strftime("%Y-%m-%d %H:%M")
+    # 本次生成时间：GitHub Actions 运行环境为 UTC，这里统一换算为北京时间
+    generated_at = pd.Timestamp.now(tz="Asia/Shanghai").strftime("%Y-%m-%d %H:%M")
 
     # 关键指标卡片：(指标名, 指标值, 补充说明)
     cards = [
-        ("数据更新于", generated_at, "每日自动刷新"),
+        ("数据更新于", generated_at, "北京时间 · 每日自动刷新"),
         ("有效数据天数", stats["days"], "已完成清洗"),
         ("年平均气温", stats["avg_temp"], "（最高 + 最低）/ 2"),
         ("极端最高气温", stats["max_temp"], stats["max_temp_date"]),
