@@ -1,0 +1,60 @@
+# 每日自动更新天气数据与图表
+# ------------------------------------------------------------------
+# 工作流程：
+#   1. GitHub 按计划（或手动）启动一个 Ubuntu 运行环境；
+#   2. 安装 requirements.txt 中的依赖；
+#   3. 运行 spider.py 抓取最近一年天气数据，覆盖 data/*.csv；
+#   4. 运行 analysis.py 重新生成 html/ 下的四张图表与汇总看板；
+#   5. 若文件有变化，自动提交并推送回仓库，GitHub Pages 随即更新。
+name: 每日更新天气数据
+
+on:
+  schedule:
+    # UTC 01:20 对应北京时间 09:20，此时前一天的归档数据已基本就绪
+    - cron: "20 1 * * *"
+  # 支持在 Actions 页面手动点击运行，便于调试或临时刷新
+  workflow_dispatch:
+
+# 允许工作流向仓库写入提交（推送更新后的 data/ 与 html/）
+permissions:
+  contents: write
+
+# 避免多次触发时并发写入造成推送冲突
+concurrency:
+  group: weather-update
+  cancel-in-progress: false
+
+jobs:
+  update:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: 检出仓库代码
+        uses: actions/checkout@v4
+
+      - name: 配置 Python 环境
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+          cache: pip
+
+      - name: 安装依赖
+        run: pip install -r requirements.txt
+
+      - name: 抓取最新天气数据
+        run: python spider.py
+
+      - name: 重新生成图表与看板
+        run: python analysis.py
+
+      - name: 提交并推送更新
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "github-actions[bot]@users.noreply.github.com"
+          git add data html
+          if git diff --cached --quiet; then
+            echo "本次运行数据无变化，跳过提交"
+          else
+            git commit -m "chore: 自动更新天气数据 $(date -u '+%Y-%m-%d %H:%M UTC')"
+            git push
+          fi
